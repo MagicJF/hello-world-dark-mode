@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World — Dark Mode</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1a1a1a;
+      --muted: #5c5c5c;
+      --card: #f4f4f5;
+      --accent: #2563eb;
+      --border: #e4e4e7;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0f0f11;
+      --fg: #f4f4f5;
+      --muted: #a1a1aa;
+      --card: #1a1a1d;
+      --accent: #60a5fa;
+      --border: #2a2a2e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    main {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 32rem;
+      width: calc(100% - 2rem);
+      transition: background .25s ease, border-color .25s ease;
+    }
+
+    h1 { margin: 0 0 .5rem; font-size: clamp(1.75rem, 6vw, 2.5rem); }
+
+    p { margin: 0 0 1.75rem; color: var(--muted); line-height: 1.6; }
+
+    button {
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      padding: .75rem 1.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--accent);
+      color: #fff;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { opacity: .9; }
+    button:active { transform: scale(.97); }
+    button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Hello, World!</h1>
+    <p>Página mínima con modo claro y oscuro. El tema se recuerda entre visitas y respeta la preferencia del sistema.</p>
+    <button id="toggle" type="button" aria-live="polite">Cambiar a modo oscuro</button>
+  </main>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var button = document.getElementById("toggle");
+      var stored = null;
+
+      try { stored = localStorage.getItem("theme"); } catch (e) {}
+
+      var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var theme = stored || (systemDark ? "dark" : "light");
+
+      function apply(next) {
+        root.setAttribute("data-theme", next);
+        button.textContent = next === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+        button.setAttribute("aria-pressed", String(next === "dark"));
+      }
+
+      apply(theme);
+
+      button.addEventListener("click", function () {
+        theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        apply(theme);
+        try { localStorage.setItem("theme", theme); } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>
